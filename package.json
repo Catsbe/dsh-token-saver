@@ -39,5 +39,13 @@
     "cost",
     "steps"
   ],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Catsbe/dsh-lean.git"
+  },
+  "homepage": "https://github.com/Catsbe/dsh-lean#readme",
+  "bugs": {
+    "url": "https://github.com/Catsbe/dsh-lean/issues"
+  }
 }
