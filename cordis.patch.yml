@@ -1,0 +1,6 @@
+# dsh-lean bundle patch: load the package main entry as a host Cordis plugin.
+# Defaults live in lib/index.js Config; override via the profile cordis.patch.yml
+# (id: dsh-lean) or the plugin Configuration form.
+- insert:
+    - id: dsh-lean
+      name: dsh-lean

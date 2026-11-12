@@ -1,0 +1,43 @@
+{
+  "name": "dsh-lean",
+  "version": "0.1.0",
+  "description": "Lean-context plugin for DeepSeek Harness: reduces step count (batch guidance, soft step budget, redundant re-read nudges) and conservatively spills oversized pwsh/web_fetch outputs to disk with full read-back. Append-only; never rewrites history or the tool set, so KV cache stays stable.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.2.0-rc.2 || >=0.2.1-rc.2 || >=0.2.2-rc.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4 || >=4.0.6-alpha.2 <5.0.0",
+    "@deepseek-ai/dsh-llm": ">=0.2.0-rc.2 || >=0.2.1-rc.2 || >=0.2.2-rc.1",
+    "@deepseek-ai/dsh-token-meter": ">=0.2.0-rc.2 || >=0.2.1-rc.2 || >=0.2.2-rc.1",
+    "@deepseek-ai/schemastery": "^3.18.2 || >=3.18.6-alpha.2 <4.0.0"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "cordis",
+    "plugin",
+    "context",
+    "token",
+    "cost",
+    "steps"
+  ],
+  "license": "Apache-2.0"
+}
