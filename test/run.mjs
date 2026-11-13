@@ -88,10 +88,10 @@ console.log("T1 identity + A1 batch-guidance section");
 {
   const { ctx, sections } = makeCtx();
   apply(ctx, { enabled: true, batchGuidance: true, stepThresholds: [12, 20], redundantReadReminder: true, spillTools: ["pwsh", "web_fetch"], spillMaxTokens: 4000 });
-  ok(name === "dsh-lean", "name is dsh-lean");
+  ok(name === "dsh-token-saver", "name is dsh-token-saver");
   ok(inject.includes("tools") && inject.includes("systemPrompt"), "inject tools+systemPrompt");
-  ok(sections.some((s) => s.name === "dsh-lean:batch-guidance" && /parallel/i.test(s.text)), "A1 section registered with parallel guidance");
-  ok(sections.find((s) => s.name === "dsh-lean:batch-guidance").interpolate === false, "A1 section is literal (interpolate:false)");
+  ok(sections.some((s) => s.name === "dsh-token-saver:batch-guidance" && /parallel/i.test(s.text)), "A1 section registered with parallel guidance");
+  ok(sections.find((s) => s.name === "dsh-token-saver:batch-guidance").interpolate === false, "A1 section is literal (interpolate:false)");
 }
 
 // ── Test 2: A2 step budget reminder at threshold, reset on new turn ──
@@ -110,7 +110,7 @@ console.log("T2 A2 step-budget advisory");
   d = await postExecute(listeners, exec, { content: text("ok") });
   ok((d.additionalContexts ?? []).length === 1, "reminder fires at step 3");
   ok(/3 model steps/.test(d.additionalContexts[0].content[0].text), "reminder names the step count");
-  ok(d.additionalContexts[0].source.kind === "dsh-lean", "reminder source is dsh-lean (not user)");
+  ok(d.additionalContexts[0].source.kind === "dsh-token-saver", "reminder source is dsh-token-saver (not user)");
   preStep(listeners, agent, [toolMsg]); // step 4
   d = await postExecute(listeners, exec, { content: text("ok") });
   ok((d.additionalContexts ?? []).length === 0, "no repeat reminder at step 4");
@@ -183,8 +183,8 @@ console.log("T5 B inside built-in spill-policy (no double spill)");
   const exec = { agent, name: "pwsh", arguments: {}, callId: "p2" };
   const d = await postExecute(listeners, exec, { content: text(big) }, [builtinSpillPolicy]);
   ok(spillCalls.length === 1, "only ONE spill total (mine, not builtin)");
-  ok(spillCalls[0].from === undefined, "the single spill is from dsh-lean");
-  ok(spillCalls[0].content === big, "dsh-lean spilled the full original (not a pre-truncated copy)");
+  ok(spillCalls[0].from === undefined, "the single spill is from dsh-token-saver");
+  ok(spillCalls[0].content === big, "dsh-token-saver spilled the full original (not a pre-truncated copy)");
   ok(tokens(d.content) <= 4000, "final preview within the tighter 4k budget");
 }
 

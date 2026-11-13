@@ -1,12 +1,12 @@
-# dsh-lean
+# dsh-token-saver
 
 适用于 [DeepSeek Harness](https://www.deepseek.com/harness/) 的**省 token / 省步数**插件。只做两件事，且都是**追加式（append-only）**——不改工具集、不改写历史，因此 **KV 缓存前缀保持稳定**，不会像"懒加载工具"那样炸缓存。
 
-> 可与 [`dsh-context`](https://github.com/bowenliang123/dsh-context) 配合：后者用来**看**钱和时间花在哪，`dsh-lean` 用来**省**。两者互补。
+> 可与 [`dsh-context`](https://github.com/bowenliang123/dsh-context) 配合：后者用来**看**钱和时间花在哪，`dsh-token-saver` 用来**省**。两者互补。
 
 ## 它解决什么
 
-一轮对话的费用 ≈ `步数 × 每步上下文`，时间 ≈ `步数 × 首token等待 + 生成`。所以最贵的杠杆是**减少步数**和**压住每步里不断累积的工具输出**。dsh-lean 两个模块分别打这两点：
+一轮对话的费用 ≈ `步数 × 每步上下文`，时间 ≈ `步数 × 首token等待 + 生成`。所以最贵的杠杆是**减少步数**和**压住每步里不断累积的工具输出**。dsh-token-saver 两个模块分别打这两点：
 
 ### 模块 A · 步数优化（零缓存风险）
 - **A1 批量引导**：注入一段静态系统提示，要求"先规划、把彼此独立的工具调用放进同一条回复并行发出、复用已有结果"。DSH 本就支持并行（`maxParallelToolCalls` 默认 10），模型有时会忽略。
@@ -26,22 +26,22 @@ DSH 的 `dsh-base` 默认已经挂了：
 - `tool-result-pruner`：压缩时剪旧的大结果。
 - `repeat-tool-reminder`（3/5/8 次）：**完全相同**的重复调用提醒。
 
-dsh-lean **不重造**这些，而是补空隙：
+dsh-token-saver **不重造**这些，而是补空隙：
 - A3 抓的是**近似重复**（换 offset 的子集重读），官方只抓完全相同。
-- B 把 `pwsh`/`web_fetch` 从官方 12.5k **收紧到 4k**。实现上 dsh-lean 的监听器**追加（不 prepend）**，跑在内置 `spill-policy` 的**内层**，因此拿到的是原始结果、**只落盘一次**，外层内置策略看到已 ≤4k 就直接放行，不会二次落盘。
+- B 把 `pwsh`/`web_fetch` 从官方 12.5k **收紧到 4k**。实现上 dsh-token-saver 的监听器**追加（不 prepend）**，跑在内置 `spill-policy` 的**内层**，因此拿到的是原始结果、**只落盘一次**，外层内置策略看到已 ≤4k 就直接放行，不会二次落盘。
 
-**一个诚实的细节**：`pwsh` 工具自身会先截断输出并给出完整输出路径，然后才轮到 dsh-lean。所以 dsh-lean 的落盘文件装的是"pwsh 已保留的那份"，而**真正的全量输出路径仍保留在通知里**，没有任何信息丢失。
+**一个诚实的细节**：`pwsh` 工具自身会先截断输出并给出完整输出路径，然后才轮到 dsh-token-saver。所以 dsh-token-saver 的落盘文件装的是"pwsh 已保留的那份"，而**真正的全量输出路径仍保留在通知里**，没有任何信息丢失。
 
 ## 安装
 
 需要 `dsh` CLI（见 [DeepSeek Harness](https://www.npmjs.com/package/@deepseek-ai/dsh)）。把本仓库克隆/下载到本地后，用 `link:` 方式装入你的 profile（live 开发链接，改源码即生效）：
 
 ```sh
-# 将 <path-to-dsh-lean> 换成本仓库在你机器上的绝对路径
-dsh plugin --profile web add "link:<path-to-dsh-lean>"
+# 将 <path-to-dsh-token-saver> 换成本仓库在你机器上的绝对路径
+dsh plugin --profile web add "link:<path-to-dsh-token-saver>"
 ```
 
-或在 DeepSeek Harness 的 **Add plugin** 向导里选择本地目录安装。安装后 `package.json` 的 `dsh.profile.bundles` 会含 `dsh-lean`，`cordis.patch.yml` 会插入加载行。
+或在 DeepSeek Harness 的 **Add plugin** 向导里选择本地目录安装。安装后 `package.json` 的 `dsh.profile.bundles` 会含 `dsh-token-saver`，`cordis.patch.yml` 会插入加载行。
 
 > 依赖（`@deepseek-ai/cordis`、`dsh-llm`、`dsh-token-meter`、`schemastery`）由 Harness 运行时提供，无需单独安装。
 
@@ -49,7 +49,7 @@ dsh plugin --profile web add "link:<path-to-dsh-lean>"
 
 在 profile 的 `cordis.patch.yml` 里按 id 覆盖（或用插件 Configuration 表单）：
 ```yaml
-- id: dsh-lean
+- id: dsh-token-saver
   config:
     enabled: true              # 总开关
     batchGuidance: true        # A1 批量引导
@@ -68,7 +68,7 @@ dsh plugin --profile web add "link:<path-to-dsh-lean>"
 - **步数**（上下文统计）：A 生效应下降。
 - **工具调用 token / 工具结果占比**（Token 统计环形图）：B 生效应下降。
 - **计费 token、预估费用、活跃时长**：整体应下降。
-- **缓存命中**：应保持高位（dsh-lean 不动工具集/历史，不应拉低缓存）。
+- **缓存命中**：应保持高位（dsh-token-saver 不动工具集/历史，不应拉低缓存）。
 
 直接观察 B：跑一条大输出命令（如 `1..2500 | % { "line $_ ..." }`），结果会变成头尾预览 + `(Omitted N bytes. Full formatted result stored at: …)`，用 `read`/`grep` 那个路径可取回全文。
 

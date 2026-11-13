@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "省 Token 助手",
+    "description": "不改工具集、不改写历史的省 token / 省步数插件，KV 缓存前缀保持稳定。模块 A：先规划+并行批处理引导、软步数预算（默认第 12/20 步追加提醒，只劝不拦）、子集重复读取提醒。模块 B：pwsh/web_fetch 大输出收紧到默认 4000 token，超出部分头尾预览+全文落盘，可用 read/grep 完整读回，不丢信息。阈值与工具范围可在 Configuration 表单调整（行 id：dsh-token-saver）。"
+  }
+}

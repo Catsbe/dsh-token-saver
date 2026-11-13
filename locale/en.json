@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Token saver",
+    "description": "Saves tokens and model steps without changing the tool set or rewriting history, so the KV-cache prefix stays stable. Module A: plan-first / parallel-batch guidance, a soft per-turn step budget (advisory notices at steps 12/20, never a hard limit), and redundant re-read nudges. Module B: a tighter inline budget (default 4000 tokens) for pwsh/web_fetch results — oversized text becomes a head/tail preview plus a full spill file readable with read/grep; nothing is discarded. Tune thresholds and tool scope in the Configuration form (row id: dsh-token-saver)."
+  }
+}

@@ -1,18 +1,22 @@
 {
-  "name": "dsh-lean",
-  "version": "0.1.0",
-  "description": "Lean-context plugin for DeepSeek Harness: reduces step count (batch guidance, soft step budget, redundant re-read nudges) and conservatively spills oversized pwsh/web_fetch outputs to disk with full read-back. Append-only; never rewrites history or the tool set, so KV cache stays stable.",
+  "name": "dsh-token-saver",
+  "version": "0.2.0",
+  "description": "Token-saving plugin for DeepSeek Harness: reduces step count (batch guidance, soft step budget, redundant re-read nudges) and conservatively spills oversized pwsh/web_fetch outputs to disk with full read-back. Append-only; never rewrites history or the tool set, so KV cache stays stable.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
   },
   "files": [
     "lib/index.js",
     "cordis.patch.yml",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "locale/*.json",
+    "icon.svg"
   ],
   "dsh": {
     "bundle": {
@@ -42,10 +46,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Catsbe/dsh-lean.git"
+    "url": "git+https://github.com/Catsbe/dsh-token-saver.git"
   },
-  "homepage": "https://github.com/Catsbe/dsh-lean#readme",
+  "homepage": "https://github.com/Catsbe/dsh-token-saver#readme",
   "bugs": {
-    "url": "https://github.com/Catsbe/dsh-lean/issues"
+    "url": "https://github.com/Catsbe/dsh-token-saver/issues"
   }
 }

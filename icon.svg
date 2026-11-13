@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <mask id="ts-arrow-cut">
+      <rect width="36" height="36" fill="#fff"/>
+      <path d="M16.5 10.5 H19.5 V17.5 H23.5 L18 24.5 L12.5 17.5 H16.5 Z" fill="#000"/>
+    </mask>
+  </defs>
+  <g mask="url(#ts-arrow-cut)">
+    <circle cx="18" cy="18" r="11" fill="#4A5699"/>
+    <circle cx="18" cy="18" r="8.75" fill="#6277BA"/>
+  </g>
+</svg>
