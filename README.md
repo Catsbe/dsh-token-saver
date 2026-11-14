@@ -1,6 +1,6 @@
 # dsh-token-saver
 
-适用于 [DeepSeek Harness](https://www.deepseek.com/harness/) 的**省 token / 省步数**插件。v0.3.0 在保留“append-only、不改工具集、不改写历史”的前提下，新增三组能力：
+适用于 [DeepSeek Harness](https://www.deepseek.com/harness/) 的**省 token / 省步数**插件。v0.3.x 在保留“append-only、不改工具集、不改写历史”的前提下，提供三组核心能力：
 
 - **count-first 输出模式（借鉴 dsh-ops）**：`grep` / `glob` 的大结果先给计数、文件列表和目录/扩展名分布，全文仍在 spill 文件里，一条 `read` 随时取回。
 - **结构化压缩 + never-worse 门槛（借鉴 dsh-plugin-save-token）**：JSON / JSONL → TOON 表，表格 → 带行号的 stride 采样，日志 → 保留错误行的折叠，其他文本 → 头尾窗口；只有“字节 ≤ 原 72% 且 token 严格下降且至少省 500B”才采纳，否则原样放行。
@@ -178,6 +178,13 @@ node test/run.mjs
 2. 工具定义在 prompt 最前，**增删工具会从第一个变化的 schema token 起使缓存失效**；在高缓存命中的会话里，一次中途激活的重算成本可能吃掉数倍节省。
 
 因此本插件专注**零缓存风险**的 A + B，不做懒加载、不替换工具、不改写历史。
+
+## 版本记录
+
+- **0.3.1**：
+  - **结构化压缩预算硬上限**（`fitStructuredBudget`）：`jsonToToon` / `jsonlToToon` / `tableToStride` / `logToElision` / `grepToCountFirst` / `globToPaths` 输出统一校验 `profile.maxTokens` 预算，超限时自动收口，避免触发外层内置 `spill-policy` 的二次 spill。
+  - **工具名与文件操作追踪补全**：`matchesTool()` 新增前缀匹配以兼容 `pwsh_persistent` / `bash_persistent` 等持久终端工具；`observeRead()` 同步跟踪 `ops_edit_file`、`ops_write_file` 与 `str_replace_editor` 的文件修改失效。
+- **0.3.0**：新增 `grep`/`glob` count-first 摘要、结构化压缩（TOON / stride / 日志错误行保留）、never-worse 门槛、跨轮去重、shadow 模式与 `/token-saver stats`。
 
 ## 许可
 
