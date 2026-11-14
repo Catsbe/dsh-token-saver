@@ -1,7 +1,7 @@
 {
   "name": "dsh-token-saver",
-  "version": "0.2.0",
-  "description": "Token-saving plugin for DeepSeek Harness: reduces step count (batch guidance, soft step budget, redundant re-read nudges) and conservatively spills oversized pwsh/web_fetch outputs to disk with full read-back. Append-only; never rewrites history or the tool set, so KV cache stays stable.",
+  "version": "0.3.0",
+  "description": "Token-saving plugin for DeepSeek Harness: count-first grep/glob summaries, structure-aware JSON/JSONL/table/log compression with a never-worse gate, cross-turn dedupe, shadow mode, plus the original batch/step/re-read guidance. Append-only; never rewrites history or the tool set, so KV cache stays stable.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -40,6 +40,9 @@
     "plugin",
     "context",
     "token",
+    "token-efficiency",
+    "compression",
+    "shadow",
     "cost",
     "steps"
   ],
